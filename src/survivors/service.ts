@@ -8,4 +8,8 @@ export default {
   async getSurvivorById(id: string) {
     return await Survivor.findById(id);
   },
+  async addSurvivor(data: CreateUser) {
+    const newSurvivor = new Survivor(data);
+    return await newSurvivor.save();
+  },
 };

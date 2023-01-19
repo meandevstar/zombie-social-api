@@ -14,6 +14,10 @@ const controller = (() => {
     const data = await service.getSurvivorById(req.params.id);
     res.json(data);
   });
+  router.post('/', async (req: Request, res: Response) => {
+    const data = await service.addSurvivor(req.body);
+    res.json(data);
+  });
   return router;
 })();
 
