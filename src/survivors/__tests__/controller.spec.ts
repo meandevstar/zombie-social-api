@@ -80,4 +80,44 @@ describe('survivors controller', () => {
     }
   });
 
+  it('should update survivor by id', async () => {
+    const addRoute = inject(controller, { method: 'post', path: '/' });
+    const getRoute = inject(controller, { method: 'get', path: '/' });
+    const updateRoute = inject(controller, { method: 'put', path: '/' });
+
+    const updatedName = 'TEST';
+    let survivor: User | undefined = undefined;
+
+    const addRequest = {
+      body: fakeSurvivor,
+    };
+
+    const addResponse = {
+      json(body: Document) {
+        const newSurvivor = body.toJSON();
+        survivor = newSurvivor as User;
+      },
+    };
+
+    await addRoute.handle(addRequest, addResponse);
+
+    if (survivor) {
+      const updateRequest = {
+        body: {
+          id: (survivor as User).id,
+          data: {
+            name: updatedName,
+          },
+        },
+      };
+      await updateRoute.handle(updateRequest, resPlaceholder);
+    }
+
+    await getRoute.handle(reqPlaceholder, {
+      json(body: Document[]) {
+        const newSurvivor = body[0].toJSON();
+        assert.equal(newSurvivor.name, updatedName);
+      },
+    });
+  });
 });
