@@ -26,4 +26,22 @@ describe('survivors controller', () => {
     await route.handle(req, res);
   });
 
+  it('should create survivor', async () => {
+    const addRoute = inject(controller, { method: 'post', path: '/' });
+    const getRoute = inject(controller, { method: 'get', path: '/' });
+
+    const req = {
+      body: fakeSurvivor,
+    };
+
+    const res = {
+      json(body: Document[]) {
+        const newSurvivor = body[0].toJSON();
+        assert.equal(newSurvivor.name, fakeSurvivor.name);
+      },
+    };
+
+    await addRoute.handle(req, resPlaceholder);
+    await getRoute.handle(reqPlaceholder, res);
+  });
 });
