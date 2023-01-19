@@ -14,4 +14,9 @@ describe('survivors service', () => {
     assert.deepEqual(survivors, []);
   });
 
+  it('should add survivor', async () => {
+    await service.addSurvivor(fakeSurvivor);
+    const survivors = await service.getSurvivors();
+    assert.equal(survivors.length, 1);
+  });
 });
