@@ -25,4 +25,13 @@ describe('survivors service', () => {
     const survivor = await service.getSurvivorById(result._id.toString());
     assert.equal(survivor?._id.toString(), result._id.toString());
   });
+
+  it('should update survivor', async () => {
+    const result = await service.addSurvivor(fakeSurvivor);
+    await service.updateSurvivor(result._id.toString(), {
+      name: 'TEST',
+    });
+    const updatedSurvivor = await service.getSurvivorById(result._id.toString());
+    assert.notEqual(updatedSurvivor?.name, result?.name);
+  });
 });
