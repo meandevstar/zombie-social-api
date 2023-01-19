@@ -5,6 +5,7 @@ import { User } from 'definitions/interfaces';
 import controller from '../controller';
 import * as db from '../../tests/db';
 import { fakeSurvivor, inject, reqPlaceholder, resPlaceholder } from 'tests/mocks/survivors';
+
 describe('survivors controller', () => {
   before(async () => await db.connect());
   afterEach(async () => await db.clearDatabase());
