@@ -120,4 +120,54 @@ describe('survivors controller', () => {
       },
     });
   });
+
+  it('should report survivor as infected', async () => {
+    const addRoute = inject(controller, { method: 'post', path: '/' });
+    const reportRoute = inject(controller, { method: 'post', path: '/report-as-infected' });
+    const getRoute = inject(controller, { method: 'get', path: '/' });
+
+    let survivor1: User | undefined = undefined;
+    let survivor2: User | undefined = undefined;
+
+    await addRoute.handle(
+      {
+        body: fakeSurvivor,
+      },
+      {
+        json(body: Document) {
+          const newSurvivor = body.toJSON();
+          survivor1 = newSurvivor as User;
+        },
+      }
+    );
+    await addRoute.handle(
+      {
+        body: fakeSurvivor,
+      },
+      {
+        json(body: Document) {
+          const newSurvivor = body.toJSON();
+          survivor2 = newSurvivor as User;
+        },
+      }
+    );
+    if (survivor1 && survivor2) {
+      await reportRoute.handle(
+        {
+          body: {
+            reporter: (survivor1 as User)?.id,
+            user: (survivor2 as User)?.id,
+          }
+        },
+        resPlaceholder,
+      );
+    }
+    await getRoute.handle(reqPlaceholder, {
+      json(body: Document[]) {
+        const reportedSurvivor = body[1].toJSON() as User;
+        assert.equal(body.length, 2);
+        assert.equal(reportedSurvivor.flaggedUsers.length, 1);
+      }
+    });
+  });
 });
