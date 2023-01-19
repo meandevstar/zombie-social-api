@@ -10,6 +10,10 @@ const controller = (() => {
     res.json(data);
   });
 
+  router.get('/:id', async (req: Request, res: Response) => {
+    const data = await service.getSurvivorById(req.params.id);
+    res.json(data);
+  });
   return router;
 })();
 
