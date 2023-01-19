@@ -19,4 +19,10 @@ describe('survivors service', () => {
     const survivors = await service.getSurvivors();
     assert.equal(survivors.length, 1);
   });
+
+  it('should return survivor by id', async () => {
+    const result = await service.addSurvivor(fakeSurvivor);
+    const survivor = await service.getSurvivorById(result._id.toString());
+    assert.equal(survivor?._id.toString(), result._id.toString());
+  });
 });
