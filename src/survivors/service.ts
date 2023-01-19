@@ -12,4 +12,8 @@ export default {
     const newSurvivor = new Survivor(data);
     return await newSurvivor.save();
   },
+  async updateSurvivor(id: string, data: Partial<User>) {
+    await Survivor.updateOne({ _id: id }, data);
+    return await Survivor.findById(id);
+  },
 };
