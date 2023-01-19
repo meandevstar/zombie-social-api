@@ -34,4 +34,12 @@ describe('survivors service', () => {
     const updatedSurvivor = await service.getSurvivorById(result._id.toString());
     assert.notEqual(updatedSurvivor?.name, result?.name);
   });
+
+  it('should report as infected', async () => {
+    const survivor1 = await service.addSurvivor(fakeSurvivor);
+    const survivor2 = await service.addSurvivor(fakeSurvivor);
+    await service.reportAsInfected(survivor1._id.toString(), survivor2._id.toString());
+    const reportedSurvivor = await service.getSurvivorById(survivor2._id.toString());
+    assert.equal(reportedSurvivor?.flaggedUsers.length, 1);
+  });
 });
