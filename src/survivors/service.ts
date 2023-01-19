@@ -16,4 +16,11 @@ export default {
     await Survivor.updateOne({ _id: id }, data);
     return await Survivor.findById(id);
   },
+  async reportAsInfected(reporter: string, user: string) {
+    const reporterModel = await Survivor.findById(reporter);
+    return Survivor.findOneAndUpdate(
+      { _id: user },
+      { $push: { flaggedUsers: reporterModel } },
+    ).exec();
+  },
 };
