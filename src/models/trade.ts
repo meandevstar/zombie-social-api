@@ -1,7 +1,9 @@
 import { ItemType } from 'definitions/enums';
+import { Trade } from 'definitions/interfaces';
 import mongoose, { Schema } from 'mongoose';
 
-const tradeSchema = new Schema(
+// TODO: add status and approval/deny implementation
+const tradeSchema = new Schema<Trade>(
   {
     sender: String,
     receiver: String,
@@ -13,9 +15,6 @@ const tradeSchema = new Schema(
           enum: Object.values(ItemType),
         },
         points: Number,
-        totalCount: Number,
-        createdAt: Date,
-        updatedAt: Date,
       },
     ],
     receivedItems: [
@@ -26,9 +25,6 @@ const tradeSchema = new Schema(
           enum: Object.values(ItemType),
         },
         points: Number,
-        totalCount: Number,
-        createdAt: Date,
-        updatedAt: Date,
       },
     ],
     createdAt: Date,
@@ -46,6 +42,8 @@ const tradeSchema = new Schema(
     },
   },
 );
+
+tradeSchema.index({ status: 1, createdAt: -1 });
 
 const Trade = mongoose.model('Trade', tradeSchema);
 

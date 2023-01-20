@@ -1,8 +1,8 @@
-import { UserType } from 'definitions/enums';
-import { Gender } from 'definitions/interfaces';
+import { ItemType, UserType } from 'definitions/enums';
+import { Gender, User } from 'definitions/interfaces';
 import mongoose, { Schema } from 'mongoose';
 
-const survivorSchema = new Schema(
+const survivorSchema = new Schema<User>(
   {
     name: String,
     age: Number,
@@ -20,10 +20,27 @@ const survivorSchema = new Schema(
       lat: Number,
       long: Number,
     },
-    flaggedUsers: [this],
+    flaggedUsers: [{
+      type: Schema.Types.ObjectId,
+      model: 'User',
+    }],
     inventory: {
-      type: Map,
-      of: String,
+      [ItemType.Ammunition]: {
+        type: Number,
+        default: 0,
+      },
+      [ItemType.Food]: {
+        type: Number,
+        default: 0,
+      },
+      [ItemType.Medication]: {
+        type: Number,
+        default: 0,
+      },
+      [ItemType.Water]: {
+        type: Number,
+        default: 0,
+      },
     },
     createdAt: Date,
     updatedAt: Date,
@@ -40,6 +57,8 @@ const survivorSchema = new Schema(
     },
   },
 );
+
+survivorSchema.index({ status: 1, createdAt: -1 });
 
 const Survivor = mongoose.model('Survivor', survivorSchema);
 

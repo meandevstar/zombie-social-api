@@ -23,24 +23,21 @@ describe('survivors service', () => {
           {
             type: ItemType.Food,
             points: 4,
-            totalCount: 100,
           },
         ],
         receivedItems: [
           {
             type: ItemType.Water,
             points: 3,
-            totalCount: 100,
           },
         ],
       },
-      resPlaceholder as Response,
     );
     const trader1 = await survivorService.getSurvivorById(survivor1._id.toString());
     const trader2 = await survivorService.getSurvivorById(survivor2._id.toString());
-    assert.equal(trader1?.inventory?.get(ItemType.Water), '97');
-    assert.equal(trader1?.inventory?.get(ItemType.Food), '104');
-    assert.equal(trader2?.inventory?.get(ItemType.Water), '103');
-    assert.equal(trader2?.inventory?.get(ItemType.Food), '96');
+    assert.equal(trader1?.inventory[ItemType.Water], 97);
+    assert.equal(trader1?.inventory[ItemType.Food], 104);
+    assert.equal(trader2?.inventory[ItemType.Water], 103);
+    assert.equal(trader2?.inventory[ItemType.Food], 96);
   });
 });

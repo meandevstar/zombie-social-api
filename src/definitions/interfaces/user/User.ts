@@ -1,4 +1,5 @@
 import { ItemType, UserStatus, UserType } from 'definitions/enums';
+import { PopulatedDoc } from 'mongoose';
 import { Gender } from './Gender';
 
 export interface User {
@@ -13,12 +14,12 @@ export interface User {
     lat: number;
     long: number;
   };
-  flaggedUsers: User[]; // default 0
+  flaggedUsers: PopulatedDoc<User>[]; // default 0
   inventory: {
     [key in ItemType]: number;
   };
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface CreateUser {

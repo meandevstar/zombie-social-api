@@ -5,4 +5,6 @@ export interface Trade {
   receiver: string;
   sendItems: Item[];
   receivedItems: Item[];
+  createdAt?: Date;
+  updatedAt?: Date;
 }

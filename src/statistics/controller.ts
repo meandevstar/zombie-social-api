@@ -5,9 +5,9 @@ import service from './service';
 const controller = (() => {
   const router = Router();
 
-  router.post('/', async (req, res) => {
+  router.get('/', async (req, res) => {
     try {
-      const data = await service.addTrade(req.body);
+      const data = await service.getStatistics();
       res.json(data);
     } catch (error: any) {
       res.status(error.status).send({

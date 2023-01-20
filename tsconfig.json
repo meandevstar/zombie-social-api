@@ -12,7 +12,7 @@
     "outDir": "dist",
     "rootDir": "src",
     "sourceMap": true,
-    "types": ["node", "mocha", "chai"],
+    "types": ["node", "mocha"],
   },
   "include": ["node_modules/@types", "src/**/*"],
   "exclude": ["node_modules", "dist/**/*", "mock", "__tests__/**/*"],
