@@ -17,16 +17,6 @@ export const fakeSurvivor = {
   },
 };
 
-export const reqPlaceholder = {
-  body: {},
-};
-
-export const resPlaceholder = {
-  json() {
-    //
-  },
-};
-
 export const inject = (
   router: Router,
   { method, path, position = 0 }: { method: string; path: string; position?: number },

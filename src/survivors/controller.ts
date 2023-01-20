@@ -13,6 +13,7 @@ const controller = (() => {
       );
       res.json(data);
     } catch (error: any) {
+      console.log(error);
       res.status(500).send({ message: error.message })
     }
   });

@@ -1,9 +1,8 @@
 import assert from 'assert';
-import { Response } from 'express';
 
 import service from 'trades/service';
 import survivorService from 'survivors/service';
-import { fakeSurvivor, resPlaceholder } from 'tests/mocks/survivors';
+import { fakeSurvivor } from 'tests/mocks';
 import * as db from '../../tests/db';
 import { ItemType } from 'definitions/enums';
 

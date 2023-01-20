@@ -3,7 +3,7 @@ import { PopulatedDoc } from 'mongoose';
 import { Gender } from './Gender';
 
 export interface User {
-  _id?: string;
+  _id: string;
   id: string;
   name: string;
   age: number;

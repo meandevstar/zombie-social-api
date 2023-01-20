@@ -1,4 +1,5 @@
 import assert from 'assert';
+import { Pagination, User } from 'definitions/interfaces';
 
 import service from 'survivors/service';
 import { fakeSurvivor } from 'tests/mocks/survivors';
@@ -11,13 +12,13 @@ describe('survivors service', () => {
 
   it('should return empty survivors array', async () => {
     const survivors = await service.getSurvivors();
-    assert.deepEqual(survivors, []);
+    assert.deepEqual(survivors.data, []);
   });
 
   it('should add survivor', async () => {
     await service.addSurvivor(fakeSurvivor);
-    const survivors = await service.getSurvivors();
-    assert.equal(survivors.length, 1);
+    const survivors: Pagination<User> = await service.getSurvivors();
+    assert.equal(survivors.data.length, 1);
   });
 
   it('should return survivor by id', async () => {
@@ -39,7 +40,7 @@ describe('survivors service', () => {
     const survivor1 = await service.addSurvivor(fakeSurvivor);
     const survivor2 = await service.addSurvivor(fakeSurvivor);
     await service.reportAsInfected(survivor1._id.toString(), survivor2._id.toString());
-    const reportedSurvivor = await service.getSurvivorById(survivor2._id.toString());
+    const reportedSurvivor = await service.getSurvivorById(survivor1._id.toString());
     assert.equal(reportedSurvivor?.flaggedUsers.length, 1);
   });
 });

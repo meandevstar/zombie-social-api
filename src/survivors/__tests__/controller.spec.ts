@@ -1,10 +1,10 @@
 import assert from 'assert';
 import { Document } from 'mongoose';
 
-import { User } from 'definitions/interfaces';
+import { Pagination, User } from 'definitions/interfaces';
 import controller from '../controller';
 import * as db from '../../tests/db';
-import { fakeSurvivor, inject, reqPlaceholder, resPlaceholder } from 'tests/mocks/survivors';
+import { fakeSurvivor, inject, fakeRequest, fakeResponse } from 'tests/mocks';
 
 describe('survivors controller', () => {
   before(async () => await db.connect());
@@ -19,8 +19,8 @@ describe('survivors controller', () => {
     };
 
     const res = {
-      json(body: Document[]) {
-        assert.deepEqual(body, []);
+      json(body: Pagination<Document>) {
+        assert.deepEqual(body.data, []);
       },
     };
 
@@ -36,14 +36,14 @@ describe('survivors controller', () => {
     };
 
     const res = {
-      json(body: Document[]) {
-        const newSurvivor = body[0].toJSON();
+      json(body: Pagination<User>) {
+        const newSurvivor = body.data[0];
         assert.equal(newSurvivor.name, fakeSurvivor.name);
       },
     };
 
-    await addRoute.handle(req, resPlaceholder);
-    await getRoute.handle(reqPlaceholder, res);
+    await addRoute.handle(req, fakeResponse);
+    await getRoute.handle(fakeRequest, res);
   });
 
   it('should get survivor by id', async () => {
@@ -57,9 +57,8 @@ describe('survivors controller', () => {
     };
 
     const addResponse = {
-      json(body: Document) {
-        const newSurvivor = body.toJSON();
-        survivor = newSurvivor as User;
+      json(body: User) {
+        survivor = body;
       },
     };
 
@@ -72,9 +71,9 @@ describe('survivors controller', () => {
           },
         },
         {
-          json(body: Document) {
-            const newSurvivor = body.toJSON();
-            assert.equal(survivor?.id.toString(), newSurvivor.id.toString());
+          json(body: User) {
+            const newSurvivor = body;
+            assert.equal(survivor?._id.toString(), newSurvivor._id.toString());
           },
         },
       );
@@ -94,9 +93,8 @@ describe('survivors controller', () => {
     };
 
     const addResponse = {
-      json(body: Document) {
-        const newSurvivor = body.toJSON();
-        survivor = newSurvivor as User;
+      json(body: User) {
+        survivor = body;
       },
     };
 
@@ -111,12 +109,12 @@ describe('survivors controller', () => {
           },
         },
       };
-      await updateRoute.handle(updateRequest, resPlaceholder);
+      await updateRoute.handle(updateRequest, fakeResponse);
     }
 
-    await getRoute.handle(reqPlaceholder, {
-      json(body: Document[]) {
-        const newSurvivor = body[0].toJSON();
+    await getRoute.handle(fakeRequest, {
+      json(body: Pagination<User>) {
+        const newSurvivor = body.data[0];
         assert.equal(newSurvivor.name, updatedName);
       },
     });
@@ -135,9 +133,8 @@ describe('survivors controller', () => {
         body: fakeSurvivor,
       },
       {
-        json(body: Document) {
-          const newSurvivor = body.toJSON();
-          survivor1 = newSurvivor as User;
+        json(body: User) {
+          survivor1 = body;
         },
       }
     );
@@ -146,9 +143,8 @@ describe('survivors controller', () => {
         body: fakeSurvivor,
       },
       {
-        json(body: Document) {
-          const newSurvivor = body.toJSON();
-          survivor2 = newSurvivor as User;
+        json(body: User) {
+          survivor2 = body;
         },
       }
     );
@@ -156,17 +152,17 @@ describe('survivors controller', () => {
       await reportRoute.handle(
         {
           body: {
-            reporter: (survivor1 as User)?.id,
-            user: (survivor2 as User)?.id,
+            reporter: (survivor1 as User)?._id,
+            user: (survivor2 as User)?._id,
           }
         },
-        resPlaceholder,
+        fakeResponse,
       );
     }
-    await getRoute.handle(reqPlaceholder, {
-      json(body: Document[]) {
-        const reportedSurvivor = body[1].toJSON() as User;
-        assert.equal(body.length, 2);
+    await getRoute.handle(fakeRequest, {
+      json(body: Pagination<User>) {
+        const reportedSurvivor = body.data[0];
+        assert.equal(body.data.length, 2);
         assert.equal(reportedSurvivor.flaggedUsers.length, 1);
       }
     });

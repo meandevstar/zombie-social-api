@@ -1,9 +1,8 @@
 import assert from 'assert';
-import { Document } from 'mongoose';
 
-import { User } from 'definitions/interfaces';
+import { Pagination, User } from 'definitions/interfaces';
 import { ItemType } from 'definitions/enums';
-import { fakeSurvivor, inject, reqPlaceholder, resPlaceholder } from 'tests/mocks/survivors';
+import { fakeSurvivor, inject, fakeRequest, fakeResponse } from 'tests/mocks';
 import controller from 'trades/controller';
 import survivorController from 'survivors/controller';
 import * as db from '../../tests/db';
@@ -26,8 +25,8 @@ describe('trade controller', () => {
         body: fakeSurvivor,
       },
       {
-        json(body: Document) {
-          survivor1 = body.toJSON();
+        json(body: User) {
+          survivor1 = body;
         },
       },
     );
@@ -36,8 +35,8 @@ describe('trade controller', () => {
         body: fakeSurvivor,
       },
       {
-        json(body: Document) {
-          survivor2 = body.toJSON();
+        json(body: User) {
+          survivor2 = body;
         },
       },
     );
@@ -45,8 +44,8 @@ describe('trade controller', () => {
       await tradeRoute.handle(
         {
           body: {
-            receiver: (survivor1 as User)?.id,
-            sender: (survivor2 as User)?.id,
+            receiver: (survivor1 as User)?._id.toString(),
+            sender: (survivor2 as User)?._id.toString(),
             sendItems: [
               {
                 type: ItemType.Food,
@@ -63,17 +62,17 @@ describe('trade controller', () => {
             ],
           },
         },
-        resPlaceholder,
+        fakeResponse,
       );
 
-      await getRoute.handle(reqPlaceholder, {
-        json(body: Document[]) {
-          const trader1 = body[0].toJSON() as User;
-          const trader2 = body[1].toJSON() as User;
-          assert.equal(trader1.inventory.WATER, '97');
-          assert.equal(trader1.inventory.FOOD, '104');
-          assert.equal(trader2.inventory.WATER, '103');
-          assert.equal(trader2.inventory.FOOD, '96');
+      await getRoute.handle(fakeRequest, {
+        json(body: Pagination<User>) {
+          const trader1 = body.data[0];
+          const trader2 = body.data[1];
+          assert.equal(trader1.inventory.WATER, '103');
+          assert.equal(trader1.inventory.FOOD, '96');
+          assert.equal(trader2.inventory.WATER, '97');
+          assert.equal(trader2.inventory.FOOD, '104');
         }
       })
     }
