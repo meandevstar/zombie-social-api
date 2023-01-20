@@ -1,17 +1,21 @@
 import { UserStatus } from 'definitions/enums';
 import { CreateUser, User } from 'definitions/interfaces';
+import { Pagination } from 'definitions/interfaces';
 import ZombieError from 'helpers/error';
 import Survivor from '../models/survivor';
 
 export default {
-  async getSurvivors(limit = 20, page = 0) {
-    return await Survivor.find({
-      status: UserStatus.Normal,
-    })
+  async getSurvivors(limit = 20, page = 0): Promise<Pagination<User>> {
+    const survivors = await Survivor.find({ status: UserStatus.Normal })
       .sort('-createdAt')
       .skip(page * limit)
       .limit(limit)
       .lean({ virtuals: true });
+    const totalSurvivors = await Survivor.count({ satus: UserStatus.Normal });
+    return {
+      total: totalSurvivors,
+      data: survivors,
+    };
   },
 
   async getSurvivorById(id: string) {

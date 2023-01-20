@@ -5,9 +5,12 @@ import service from './service';
 const controller = (() => {
   const router = Router();
 
-  router.get('/', async (_: Request, res: Response) => {
+  router.get('/', async (req: Request, res: Response) => {
     try {
-      const data = await service.getSurvivors();
+      const data = await service.getSurvivors(
+        +(req.query?.limit || 0),
+        +(req.query?.page || 0),
+      );
       res.json(data);
     } catch (error: any) {
       res.status(500).send({ message: error.message })
